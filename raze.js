@@ -244,6 +244,14 @@ async function onDocumentLoad() {
     }
     handleCursorKeys.call(cursorKeys, null);
 
+    // ?cursor=protek (or kempston, sinclair, cursorkeys) picks the joystick mapping for the arrow keys
+    // without touching the saved preference, so pages that embed the emulator can choose it.
+    let cursorParam = CURSOR_KEY_NAMES.indexOf(urlParams.get('cursor'));
+    if (cursorParam >= 0) {
+        cursorKeys.selectedIndex = cursorParam;
+        g_cursorKeys = CURSOR_KEYS[cursorParam];
+    }
+
     let keyboard = document.getElementById('keyboard');
     if ('ontouchstart' in keyboard) {
         let joyBtns = document.getElementById('joy-btns');
@@ -604,6 +612,8 @@ const CURSOR_KEYS = [
     //protek
     [0x34, 0x42, 0x44, 0x43, 0x40], //5, 8, 6, 7, 0
 ];
+
+const CURSOR_KEY_NAMES = ['cursorkeys', 'kempston', 'sinclair', 'protek'];
 
 function getKeyCode(ev) {
     switch (ev.code) {
